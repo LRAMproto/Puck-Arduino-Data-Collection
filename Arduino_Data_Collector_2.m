@@ -4,20 +4,29 @@
 
 function Arduino_Data_Collector_2()
 
+% Captures settings between calls.
+settings = struct();
+
+% Captures runtime variables during calls.
+runtime_vars = struct();
+
+% Captures data during calls.
+data = struct();
+
 if ispc
     % Checks if the Windows version of MATLAB is being used.
     % Sets port name accordingly.
-    PORT_NAME = 'COM1';
+    settings.PORT_NAME = 'COM1';
     
 elseif ismac
     % Checks if the Macintosh version of MATLAB is being used.
     % Sets port name accordingly
-    PORT_NAME ='/dev/ttyACM0';
+    settings.PORT_NAME ='/dev/ttyACM0';
     
 elseif isunix
     % Checks if the UNIX version of MATLAB is being used.
     % Sets port name accordingly.
-    PORT_NAME ='/dev/ttyACM0';
+    settings.PORT_NAME ='/dev/ttyACM0';
     
 else
     
@@ -28,7 +37,7 @@ end
 % Locate Arduino
 %
 
-arduino = serial(PORT_NAME,'BaudRate',9600);
+arduino = serial(settings.PORT_NAME,'BaudRate',9600);
 
 % Begin Communication with Arduino
 fopen(arduino);
