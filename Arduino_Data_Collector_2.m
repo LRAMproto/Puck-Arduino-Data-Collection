@@ -32,14 +32,15 @@ arduino = serial(PORT_NAME,'BaudRate',9600);
 fopen(arduino);
 
 
-% Specify number of runs to collect data from
-runs = [0:1000];        
+% Specify number of runs to collect data from.
+NUM_RUNS = 1001;
+
 % Initiate radio reading with a 1 second pause to filter out cutoff terms
 % pause(1)
 data1 = fscanf(arduino);
 pause(1)
 
-for i = 1:length(runs)
+for i = 1:NUM_RUNS
     data = fscanf(arduino,'%f');
     
     % compile data into a vector
