@@ -1,16 +1,31 @@
 % Arduino Data Collector
 
-clc; clear all; 
+function Arduino_Data_Collector_2()
 
 if ispc
+    % Checks if the system is running Windows.
+    % Sets port name accordingly.    
     PORT_NAME = 'COM1';
-elseif isunix
+
+elseif ismac
+    % Checks if the Macintosh version of MATLAB is being used.
+    % Sets port name accordingly
     PORT_NAME ='/dev/ttyACM0';
+
+elseif isunix
+    % Checks if the UNIX version of MATLAB is being used. Sets the port
+    % name accordingly.
+
+    PORT_NAME ='/dev/ttyACM0';
+
+else
+    error('Unknown operating system.');
 end
 
 %
 % Locate Arduino
 %
+
 arduino = serial(PORT_NAME,'BaudRate',9600);
 
 % Begin Communication with Arduino
@@ -101,6 +116,7 @@ title('Acceleration resultant vs Time')
 ylabel('Acceleration [G force]')
 xlabel('Time [unknown units]')
 grid on
+
 % axis([0 length(runs)/2 0 3]);
 
 
@@ -110,3 +126,5 @@ grid on
 fclose(arduino)
 delete(arduino)
 clear arduino
+
+end
