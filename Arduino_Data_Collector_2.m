@@ -37,10 +37,10 @@ end
 % Locate Arduino
 %
 
-arduino = serial(settings.PORT_NAME,'BaudRate',9600);
+runtime_vars.arduino = serial(settings.PORT_NAME,'BaudRate',9600);
 
 % Begin Communication with Arduino
-fopen(arduino);
+fopen(runtime_vars.arduino);
 
 try
     
@@ -49,25 +49,25 @@ try
     
     % Initiate radio reading with a 1 second pause to filter out cutoff terms
     % pause(1)
-    data1 = fscanf(arduino);
+    data1 = fscanf(runtime_vars.arduino);
     pause(1)
     
     for i = 1:NUM_RUNS
-        data = fscanf(arduino,'%f');
+        data = fscanf(runtime_vars.arduino,'%f');
         
         % compile data into a vector
         raw(i) = data(1);
         
     end
     
-    fclose(arduino)
+    fclose(runtime_vars.arduino)
     
 catch err
     
-    % This allows the arduino to be closed neatly in the case of some
+    % This allows the runtime_vars.arduino to be closed neatly in the case of some
     % strange error occurring.
     
-    fclose(arduino);
+    fclose(runtime_vars.arduino);
     rethrow(err);
 end
 
@@ -142,11 +142,11 @@ grid on
 
 
 % %
-% % Terminate the terminal and clear "arduino"
+% % Terminate the terminal and clear "runtime_vars.arduino"
 % %
 
-delete(arduino)
-clear arduino
+delete(runtime_vars.arduino)
+clear runtime_vars.arduino
 
 
 end
