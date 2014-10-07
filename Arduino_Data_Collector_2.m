@@ -2,10 +2,16 @@
 
 clc; clear all; 
 
+if ispc
+    PORT_NAME = 'COM1';
+elseif isunix
+    PORT_NAME ='/dev/ttyACM0';
+end
+
 %
 % Locate Arduino
 %
-arduino = serial('COM1','BaudRate',9600);
+arduino = serial(PORT_NAME,'BaudRate',9600);
 
 % Begin Communication with Arduino
 fopen(arduino);
