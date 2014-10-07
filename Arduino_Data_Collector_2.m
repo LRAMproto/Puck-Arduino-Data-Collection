@@ -45,18 +45,18 @@ fopen(runtime_vars.arduino);
 try
     
     % Specify number of runs to collect data from.
-    NUM_RUNS = 1001;
+    settings.NUM_RUNS = 1001;
     
     % Initiate radio reading with a 1 second pause to filter out cutoff terms
     % pause(1)
     data1 = fscanf(runtime_vars.arduino);
     pause(1)
     
-    for i = 1:NUM_RUNS
-        data = fscanf(runtime_vars.arduino,'%f');
+    for i = 1:settings.NUM_RUNS
+        input_data = fscanf(runtime_vars.arduino,'%f');
         
         % compile data into a vector
-        raw(i) = data(1);
+        data.raw(i) = input_data(1);
         
     end
     
@@ -71,12 +71,12 @@ catch err
     rethrow(err);
 end
 
-% Cutoff first 10 terms of Xraw due to communication delays between
+% Cutoff first 10 terms of Xdata.raw due to communication delays between
 % radio read
-cut = raw(10:length(raw));
+data.cut = data.raw(10:length(data.raw));
 
 % View compiled acceleration data
-accel_vector = reshape(cut,2,[]);
+data.accel_vector = reshape(data.cut,2,[]);
 
 
 % %
@@ -88,32 +88,32 @@ accel_vector = reshape(cut,2,[]);
 % %
 % % X data
 % %
-x_data = accel_vector(1,:);
-xavg = mean(x_data);
+data.x_data = data.accel_vector(1,:);
+data.xavg = mean(data.x_data);
 %                                      % Arduino Nano_usb = 334.1696 [mV/g]
 %                                      % Arduino Nano_bat = 403.8696 [mV/g]
 %                                      % Arduino Fio_usb = 502.2153 [mV/g]
 %                                      % Arduino Fio_bat = 503.0357 [mV/g]
-g_force_x = (x_data ./ 503.0357)-1;
-max_g_x = max(g_force_x);
+data.g_force_x = (data.x_data ./ 503.0357)-1;
+data.max_g_x = max(data.g_force_x);
 
 % %
 % % Y data
 % %
-y_data = accel_vector(2,:);
-yavg = mean(y_data);
+data.y_data = data.accel_vector(2,:);
+data.yavg = mean(data.y_data);
 %                                      % Arduino Nano_usb = 338.7065 [mV/g]
 %                                      % Arduino Nano_bat = 406.4761 [mV/g]
 %                                      % Arduino Fio_usb = 514.9405 [mV/g]
 %                                      % Arduino Fio_bat = 516.0575 [mV/g]
-g_force_y = (y_data ./ 516.0575)-1;
-max_g_y = max(g_force_y);
+data.g_force_y = (data.y_data ./ 516.0575)-1;
+data.max_g_y = max(data.g_force_y);
 
 % %
 % % Z data
 % %
-% z_data = accel_vector(3,:)
-% z_data = cut;
+% z_data = data.accel_vector(3,:)
+% z_data = data.cut;
 % zavg = mean(z_data);
 % %                                     % Arduino Nano_usb = 403.6892 [mV/g]
 % %                                     % Arduino Nano_bat = 484.2441 [mV/g]
@@ -124,16 +124,16 @@ max_g_y = max(g_force_y);
 
 
 
-% calculate the resultant
-resultant = sqrt(g_force_x.^2 + g_force_y.^2);
-maxR = max(abs(resultant))
+% calculate the data.resultant
+data.resultant = sqrt(data.g_force_x.^2 + data.g_force_y.^2);
+data.maxR = max(abs(data.resultant));
 
 % %
 % % Plot results
 % % ********* Data **********
 % %
-plot([0:length(accel_vector)-1],resultant,'linewidth',1.1)
-title('Acceleration resultant vs Time')
+plot([0:length(data.accel_vector)-1],data.resultant,'linewidth',1.1)
+title('Acceleration data.resultant vs Time')
 ylabel('Acceleration [G force]')
 xlabel('Time [unknown units]')
 grid on
