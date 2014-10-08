@@ -17,7 +17,8 @@ h.data = struct();
 h = ADC_Setup(h);
 
 % Collects data for a set number of runs.
-h = ADC_CollectForXRuns(h);
+NUM_RUNS = 1001;
+h = ADC_CollectForXRuns(h, NUM_RUNS);
 
 % Processes collected data.
 h = ADC_ProcessData(h);
@@ -57,7 +58,9 @@ end
 
 end
 
-function h = ADC_CollectForXRuns(h)
+function h = ADC_CollectForXRuns(h, NUM_RUNS)
+% Collects data from the Arduino for a certain number of runs.
+
 %
 % Locate Arduino
 %
@@ -70,7 +73,7 @@ fopen(h.runtime_vars.arduino);
 try
     
     % Specify number of runs to collect h.data from.
-    h.settings.NUM_RUNS = 1001;
+    h.settings.NUM_RUNS = NUM_RUNS;
     
     % Initiate radio reading with a 1 second pause to filter out cutoff
     % terms pause(1)
@@ -104,6 +107,9 @@ clear h.runtime_vars.arduino
 end
 
 function h = ADC_ProcessData(h)
+% Processes data gleaned from the arduino to be used in a meaningful
+% fashion.
+
 % Cutoff first 10 terms of Xh.data.raw due to communication delays between
 % radio read
 h.data.cut = h.data.raw(10:length(h.data.raw));
@@ -174,6 +180,7 @@ h.data.maxR = max(abs(h.data.resultant));
 end
 
 function h = ADC_PlotData(h)
+%Plots the data. Currently uses matlab script commands.
 
 % % % Plot results % ********* Data ********** %
 plot([0:length(h.data.accel_vector)-1],h.data.resultant,'linewidth',1.1)
