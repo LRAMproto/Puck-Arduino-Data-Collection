@@ -13,6 +13,23 @@ h.runtime_vars = struct();
 % Captures h.data during calls.
 h.data = struct();
 
+% Sets up appropriate variables.
+h = ADC_Setup(h);
+
+% Collects data for a set number of runs.
+h = ADC_CollectForXRuns(h);
+
+% Processes collected data.
+h = ADC_ProcessData(h);
+
+% Plots collected data.
+h = ADC_PlotData(h);
+
+end
+
+function h = ADC_Setup(h)
+% Setup function for the Arduino Data Collector.
+
 % Establishes what kind of arduino is being used. For the purposes of this
 % test, the type is 'fio_bat', but this can be changed.
 
@@ -38,6 +55,9 @@ else
     error('Unknown operating system.');
 end
 
+end
+
+function h = ADC_CollectForXRuns(h)
 %
 % Locate Arduino
 %
@@ -76,6 +96,14 @@ catch err
     rethrow(err);
 end
 
+% % % Terminate the terminal and clear "h.runtime_vars.arduino" %
+
+delete(h.runtime_vars.arduino)
+clear h.runtime_vars.arduino
+
+end
+
+function h = ADC_ProcessData(h)
 % Cutoff first 10 terms of Xh.data.raw due to communication delays between
 % radio read
 h.data.cut = h.data.raw(10:length(h.data.raw));
@@ -139,11 +167,13 @@ h.data.max_g_y = max(h.data.g_force_y);
 % Fio_bat = g_force_z = abs(z_data ./ h.settings.calibration(2)); max_g_z =
 % max(g_force_z);
 
-
-
 % calculate the h.data.resultant
 h.data.resultant = sqrt(h.data.g_force_x.^2 + h.data.g_force_y.^2);
 h.data.maxR = max(abs(h.data.resultant));
+
+end
+
+function h = ADC_PlotData(h)
 
 % % % Plot results % ********* Data ********** %
 plot([0:length(h.data.accel_vector)-1],h.data.resultant,'linewidth',1.1)
@@ -153,12 +183,5 @@ xlabel('Time [unknown units]')
 grid on
 
 % axis([0 length(runs)/2 0 3]);
-
-
-% % % Terminate the terminal and clear "h.runtime_vars.arduino" %
-
-delete(h.runtime_vars.arduino)
-clear h.runtime_vars.arduino
-
 
 end
