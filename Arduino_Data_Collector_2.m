@@ -4,17 +4,9 @@
 
 function h = Arduino_Data_Collector_2()
 
-% Captures h.handles between calls.
-h.settings = struct();
-
-% Captures runtime variables during calls.
-h.runtime_vars = struct();
-
-% Captures h.data during calls.
-h.data = struct();
 
 % Sets up appropriate variables.
-h = ADC_Setup(h);
+h = ADC_Setup();
 
 % Collects data for a set number of runs.
 NUM_RUNS = 1001;
@@ -28,8 +20,17 @@ h = ADC_PlotData(h);
 
 end
 
-function h = ADC_Setup(h)
+function h = ADC_Setup()
 % Setup function for the Arduino Data Collector.
+
+% Captures h.handles between calls.
+h.settings = struct();
+
+% Captures runtime variables during calls.
+h.runtime_vars = struct();
+
+% Captures h.data during calls.
+h.data = struct();
 
 % Establishes what kind of arduino is being used. For the purposes of this
 % test, the type is 'fio_bat', but this can be changed.
