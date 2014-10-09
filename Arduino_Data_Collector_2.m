@@ -105,19 +105,18 @@ end
 delete(h.runtime_vars.arduino)
 clear h.runtime_vars.arduino
 
-end
-
-function h = ADC_ProcessData(h)
-% Processes data gleaned from the arduino to be used in a meaningful
-% fashion.
-
 % Cutoff first 10 terms of Xh.data.raw due to communication delays between
 % radio read
 h.data.cut = h.data.raw(10:length(h.data.raw));
 
 % View compiled acceleration h.data
 h.data.accel_vector = reshape(h.data.cut,2,[]);
+end
 
+function h = ADC_ProcessData(h)
+
+% Processes data gleaned from the arduino to be used in a meaningful
+% fashion.
 
 % % % *********** Calibration and Conversion ************** % % ////
 % Convert [mV] h.data into G-forces and calibrate each axis //// %
